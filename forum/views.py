@@ -121,6 +121,7 @@ def topic_detail_json(request, pk):
         for post in list_post:
             author_email = User.objects.get(id=post['author_id'])
             post['username'] = str(author_email)
+            post['email'] = author_email.email
         return JsonResponse(list_post, safe=False)
 
 def post_detail_json(request, pk):
@@ -130,6 +131,7 @@ def post_detail_json(request, pk):
         for comment in list_comment:    
             author_email = User.objects.get(id=comment['author_id'])
             comment['username'] = str(author_email)
+            comment['email'] = author_email.email
         return JsonResponse(list_comment, safe=False)
 
 @csrf_exempt
@@ -148,8 +150,8 @@ def add_post(request):
         data = json.loads(request.body)
         topic_id = data['topic_id']
         topic = Topic.objects.get(pk=topic_id)
-        author_id = data['author_id']
-        author = User.objects.get(id=author_id)
+        email = data['email']
+        author = User.objects.get(email=email)
         post_title = data['title']
         post_body = data['body']
         post = Post(author=author, topic=topic, title=post_title, body=post_body)
@@ -162,8 +164,8 @@ def add_comment(request):
         data = json.loads(request.body)
         post_id = data['post_id']
         post = Post.objects.get(pk=post_id)
-        author_id = data['author_id']
-        author = User.objects.get(id=author_id)
+        email = data['email']
+        author = User.objects.get(email=email)
         comment_body = data['body']
         comment = Comment(author=author, post=post, body=comment_body)
         comment.save()
