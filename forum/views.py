@@ -171,3 +171,25 @@ def add_comment(request):
         comment.save()
         return JsonResponse({'result':'Comment Added'})
 
+@csrf_exempt
+def delete_post(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        post_id = data['post_id']
+        post = Post.objects.get(pk=post_id)
+        post.delete()
+        return JsonResponse({'result':'Post has been deleted'})
+
+@csrf_exempt
+def update_post(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        post_id = data['post_id']
+        post = Post.objects.get(pk=post_id)
+        new_title = data['title']
+        new_body = data['body']
+        post.title = new_title
+        post.body = new_body
+        post.save()
+        return JsonResponse({'result':'Post has been updated'})
+

@@ -18,4 +18,6 @@ urlpatterns = [
     path('flutter/add-topic/', add_topic, name='flutter_add_topic'),
     path('flutter/add-post/', add_post, name='flutter_add_post'),
     path('flutter/add-comment/', add_comment, name='flutter_add_comment'),
+    path('flutter/update-post/', update_post, name='flutter_update_post'),
+    path('flutter/delete-post/', delete_post, name='flutter_delete_post'),
 ]
