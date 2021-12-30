@@ -40,7 +40,7 @@ DEBUG = not PRODUCTION
 
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME', '')
 
-ALLOWED_HOSTS = [f'{HEROKU_APP_NAME}.herokuapp.com']
+ALLOWED_HOSTS = [f'{HEROKU_APP_NAME}.herokuapp.com', "10.0.2.2",]
 
 if not PRODUCTION:
     ALLOWED_HOSTS += ['.localhost', '127.0.0.1', '10.0.2.2', '[::1]']
@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'todolist',
     'note',
     'schedule',
-    'anonymsg'
+    'anonymsg',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
@@ -80,6 +80,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 ROOT_URLCONF = 'utsF02.urls'
 
 TEMPLATES = [

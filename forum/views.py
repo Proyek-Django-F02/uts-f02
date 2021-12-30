@@ -1,9 +1,12 @@
+import json
+from django.contrib.auth.models import User
 from django.http import response
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormMixin
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     ListView,
     DetailView,
@@ -107,3 +110,62 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     
     def get_success_url(self):
         return reverse('topic-detail', kwargs={'pk': self.object.topic.id})
+
+def topic_list_json(request):
+    return JsonResponse(list(Topic.objects.all().values()), safe=False)
+
+def topic_detail_json(request, pk):
+    if request.method == 'GET':
+        topic_object = Topic.objects.get(pk=pk)
+        list_post = list(Post.objects.filter(topic=topic_object).values())
+        for post in list_post:
+            author_email = User.objects.get(id=post['author_id'])
+            post['username'] = str(author_email)
+        return JsonResponse(list_post, safe=False)
+
+def post_detail_json(request, pk):
+    if request.method == 'GET':
+        post_object = Post.objects.get(pk=pk)
+        list_comment = list(Comment.objects.filter(post=post_object).values())
+        for comment in list_comment:    
+            author_email = User.objects.get(id=comment['author_id'])
+            comment['username'] = str(author_email)
+        return JsonResponse(list_comment, safe=False)
+
+@csrf_exempt
+def add_topic(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        topic_title = data['title']
+        topic_desc = data['description']
+        topic = Topic(title=topic_title, description=topic_desc)
+        topic.save()
+        return JsonResponse({'result':'Topic Added'})
+
+@csrf_exempt
+def add_post(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        topic_id = data['topic_id']
+        topic = Topic.objects.get(pk=topic_id)
+        author_id = data['author_id']
+        author = User.objects.get(id=author_id)
+        post_title = data['title']
+        post_body = data['body']
+        post = Post(author=author, topic=topic, title=post_title, body=post_body)
+        post.save()
+        return JsonResponse({'result':'Post Added'})
+
+@csrf_exempt
+def add_comment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        post_id = data['post_id']
+        post = Post.objects.get(pk=post_id)
+        author_id = data['author_id']
+        author = User.objects.get(id=author_id)
+        comment_body = data['body']
+        comment = Comment(author=author, post=post, body=comment_body)
+        comment.save()
+        return JsonResponse({'result':'Comment Added'})
+
