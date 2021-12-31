@@ -40,10 +40,10 @@ DEBUG = not PRODUCTION
 
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME', '')
 
-ALLOWED_HOSTS = [f'{HEROKU_APP_NAME}.herokuapp.com']
+ALLOWED_HOSTS = [f'{HEROKU_APP_NAME}.herokuapp.com', "10.0.2.2",]
 
 if not PRODUCTION:
-    ALLOWED_HOSTS += ['.localhost', '127.0.0.1', '[::1]']
+    ALLOWED_HOSTS += ['.localhost', '127.0.0.1', '10.0.2.2', '[::1]']
 
 
 # Application definition
@@ -55,22 +55,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'main',
     'user',
-    'anonymsg',
     'news',
+    'forum',
+    'crispy_forms',
+    'todolist',
+    'note',
+    'schedule',
+    'anonymsg',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+CORS_ALLOW_CREDENTIALS = True
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+  'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 ROOT_URLCONF = 'utsF02.urls'
 
 TEMPLATES = [
@@ -150,6 +160,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Crispy forms
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 # This is the directory for storing `collectstatic` results.
 # This shouldn't be included in your Git repository.
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -174,8 +188,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # EMAIL_PORT=os.environ.get('EMAIL_PORT')
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'pbp.f02@gmail.com'
-EMAIL_HOST_PASSWORD = 'nico-nico-nii!!'
+EMAIL_HOST = 'smtp-relay.sendinblue.com'
+EMAIL_HOST_USER = 'rinhoshizora1nov@gmail.com'
+EMAIL_HOST_PASSWORD = 'y4zL2t7jNAfrWEJc'
 EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = 'Admin Django <pbp.f02@gmail.com>'
+LOGIN_URL = '/user/login/'
+DEFAULT_FROM_EMAIL = 'Admin Django <testdjangof02@gmail.com>'

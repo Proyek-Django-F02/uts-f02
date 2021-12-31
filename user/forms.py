@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.forms import ValidationError, EmailField
+from .models import Profile
 
 from user import models
 
@@ -82,8 +83,10 @@ class CreateUserForm(UserCreationForm):
     def save(self, commit= True):
         user = super(CreateUserForm, self).save(commit=False)
         email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
         user.email = email
-        user.is_active=False
+        user.is_active=True
         if commit:
             user.save()
+        profile = Profile.objects.create(user=user, name=username, email=email)
         return user

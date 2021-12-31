@@ -1,0 +1,16 @@
+#content {
+    background-color: darkturquoise;
+}
+#btn-topic {
+    background-color: lightskyblue;
+}
+.title {
+    width: 10ch;
+}
+.content-section{
+    background-color:floralwhite;
+    max-width: 90%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 15px;
+}
