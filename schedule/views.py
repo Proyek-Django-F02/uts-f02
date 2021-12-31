@@ -102,10 +102,10 @@ def flutter_add_activity(request):
         return JsonResponse({}, status=404)
 
 @csrf_exempt
-def flutter_delete_activity(request):
+def flutter_delete_activity(request, id):
     data = json.loads(request.body)
     name = data['username']
-    id = int(data['id'])
+    id = int(id)
     user = User.objects.get(username=name)
     
     if user is not None:

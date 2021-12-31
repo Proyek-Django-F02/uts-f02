@@ -8,5 +8,5 @@ urlpatterns = [
 
     path('flutter/activity-list/<str:name>', flutter_activity_list, name='flutter-schedule'),
     path('flutter/add/', flutter_add_activity, name='flutter-add'),
-    path('flutter/delete', flutter_delete_activity, name='flutter-delete')
+    path('flutter/delete/<str:id>', flutter_delete_activity, name='flutter-delete')
 ]
