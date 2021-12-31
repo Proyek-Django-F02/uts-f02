@@ -3,7 +3,9 @@ from django.core import serializers
 from django.http.response import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.utils.dateparse import parse_datetime
 from django.views.decorators.csrf import csrf_exempt
+import json
 
 from user.models import Profile
 from .models import Activity
@@ -74,8 +76,23 @@ def flutter_activity_list(request, name):
         return JsonResponse({}, status=404)
 
 @csrf_exempt
-def flutter_form(request):
-    None
+def flutter_add_activity(request):
+    data = json.loads(request.body)
+    username=data['username']
+    user = User.objects.get(username=username)
+    print(data)
+    if user is not None:
+        activity = Activity.objects.get(user=user)
+        activity.activity = data['activity']
+        activity.year = data['year']
+        activity.month = data['month']
+        activity.day = data['day']
+        activity.start_time = parse_datetime(data['start_time'])
+        activity.end_time = parse_datetime(data['end_time'])
+        activity.save()
+        return JsonResponse({}, status=200)
+    else:
+        return JsonResponse({}, status=404)
 
 @csrf_exempt
 def flutter_delete_activity(request):
