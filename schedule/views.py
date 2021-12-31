@@ -1,3 +1,5 @@
+import datetime
+from time import time
 from django.shortcuts import render
 from django.core import serializers
 from django.http.response import JsonResponse
@@ -80,20 +82,37 @@ def flutter_add_activity(request):
     data = json.loads(request.body)
     username=data['username']
     user = User.objects.get(username=username)
+    activity_title = data['activity']
+    year = data['year']
+    month = data['month']
+    day = data['day']
+    start_time = datetime.datetime.strptime(data['start_time'], '%H:%M').time()
+    end_time = datetime.datetime.strptime(data['end_time'], '%H:%M').time()
+    type = data['type']
+    desc = data['desc']
+
+    print(start_time)
     print(data)
     if user is not None:
-        activity = Activity.objects.get(user=user)
-        activity.activity = data['activity']
-        activity.year = data['year']
-        activity.month = data['month']
-        activity.day = data['day']
-        activity.start_time = parse_datetime(data['start_time'])
-        activity.end_time = parse_datetime(data['end_time'])
+        activity = Activity.objects.create(user=user, activity=activity_title, year=year, month=month, day=day, start_time=start_time, end_time=end_time, type=type, desc=desc)
         activity.save()
         return JsonResponse({}, status=200)
     else:
+        print("ga berhasil :( " + data)
         return JsonResponse({}, status=404)
 
 @csrf_exempt
-def flutter_delete_activity(request):
-    None
+def flutter_delete_activity(request, id):
+    data = json.loads(request.body)
+    name = data['username']
+    id = int(id)
+    user = User.objects.get(username=name)
+    
+    if user is not None:
+        activity = Activity.objects.get(
+            user=user, id=id
+        )
+        activity.delete()
+        return JsonResponse({}, status=200)
+    else:
+        return JsonResponse({}, status=404)
